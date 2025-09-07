@@ -51,7 +51,7 @@ class Player(arcade.Sprite):
         if self.key_press_state["down"]:
             self.center_y -= self.STEP_INCREMENT
 
-        if self.center_y < 0:
-            self.center_y = 0
-        elif (self.center_y + self.PLAYER_HEIGHT) >  WINDOW_HEIGHT:
-            self.center_y = WINDOW_HEIGHT - self.PLAYER_HEIGHT
+        if self.center_y < (self.PLAYER_HEIGHT/2):
+            self.center_y = self.PLAYER_HEIGHT/2
+        elif (self.center_y + (self.PLAYER_HEIGHT/2)) >  WINDOW_HEIGHT:
+            self.center_y = WINDOW_HEIGHT - (self.PLAYER_HEIGHT/2)
