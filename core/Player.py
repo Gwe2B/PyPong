@@ -26,6 +26,11 @@ class Player(arcade.Sprite):
             "down": False,
         }
 
+        self.score = 0
+
+    def increment_score(self):
+        self.score += 1
+
     def register_key_press(self, key):
         if not key in self.input_map.values():
             pass

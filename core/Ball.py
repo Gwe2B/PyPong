@@ -13,6 +13,8 @@ class Ball(arcade.Sprite):
         self.velocity_y = velocity_y
         self.radius = radius
 
+        self.on_side_wall_hit = None
+
     def update(self, delta_time: float = 1/60):
         # Move the ball
         self.center_y += self.velocity_y
@@ -20,9 +22,13 @@ class Ball(arcade.Sprite):
 
         # See if the ball hit the edge of the screen. If so, change direction
         if self.center_x < self.radius:
+            if self.on_side_wall_hit:
+                self.on_side_wall_hit("left")
             self.velocity_x *= -1
 
         if self.center_x > WINDOW_WIDTH - self.radius:
+            if self.on_side_wall_hit:
+                self.on_side_wall_hit("right")
             self.velocity_x *= -1
 
         if self.center_y < self.radius:
@@ -30,3 +36,6 @@ class Ball(arcade.Sprite):
 
         if self.center_y > WINDOW_HEIGHT - self.radius:
             self.velocity_y *= -1
+    
+    def bounce(self):
+        self.velocity_x *= -1
