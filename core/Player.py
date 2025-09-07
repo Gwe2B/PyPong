@@ -3,23 +3,28 @@ import arcade
 
 from core.constants import WINDOW_HEIGHT
 
-class Player:
+class Player(arcade.Sprite):
     PLAYER_WIDTH = 10
     PLAYER_HEIGHT = 100
     STEP_INCREMENT = 5
 
     def __init__(self, pos_x: int, pos_y: int, input_map: Mapping[str, int]):
-        self.pos_x = pos_x
-        self.pos_y = pos_y
+        super().__init__()
+        # Création d'une texture rectangulaire blanche
+        self.texture = arcade.make_soft_square_texture(
+            max(Player.PLAYER_WIDTH, Player.PLAYER_HEIGHT),
+            arcade.csscolor.WHITE,
+            outer_alpha=255
+        )
+        self.width = Player.PLAYER_WIDTH
+        self.height = Player.PLAYER_HEIGHT
+        self.center_x = pos_x + self.width // 2
+        self.center_y = pos_y + self.height // 2
         self.input_map = input_map
-
         self.key_press_state = {
             "up": False,
             "down": False,
         }
-
-    def draw(self):
-        arcade.draw_lbwh_rectangle_filled(self.pos_x, self.pos_y, self.PLAYER_WIDTH, self.PLAYER_HEIGHT, arcade.csscolor.WHITE)
 
     def register_key_press(self, key):
         if not key in self.input_map.values():
@@ -39,14 +44,14 @@ class Player:
         elif key == self.input_map.get("down"):
             self.key_press_state["down"] = False
 
-    def on_update(self):
+    def update(self, delta_time: float = 1/60):
         if self.key_press_state["up"]:
-            self.pos_y += self.STEP_INCREMENT
+            self.center_y += self.STEP_INCREMENT
         
         if self.key_press_state["down"]:
-            self.pos_y -= self.STEP_INCREMENT
+            self.center_y -= self.STEP_INCREMENT
 
-        if self.pos_y < 0:
-            self.pos_y = 0
-        elif (self.pos_y + self.PLAYER_HEIGHT) >  WINDOW_HEIGHT:
-            self.pos_y = WINDOW_HEIGHT - self.PLAYER_HEIGHT
+        if self.center_y < 0:
+            self.center_y = 0
+        elif (self.center_y + self.PLAYER_HEIGHT) >  WINDOW_HEIGHT:
+            self.center_y = WINDOW_HEIGHT - self.PLAYER_HEIGHT
