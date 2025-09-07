@@ -1,0 +1,5 @@
+import arcade
+
+WINDOW_WIDTH = 1200
+WINDOW_HEIGHT = 600
+WINDOW_TITLE = "Pong"

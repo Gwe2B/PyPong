@@ -1,4 +1,9 @@
+import arcade
+
+from core.PyPong import PyPong
+
 def main():
-    pass
+    window = PyPong()
+    arcade.run()
 
 main()
