@@ -1,7 +1,7 @@
-
 import arcade
 from arcade.gui import UIManager, UIFlatButton, UISlider, UIBoxLayout, UILabel
 from core import WINDOW_WIDTH, WINDOW_HEIGHT, BUTTON_STYLE, SLIDER_STYLE, settings
+from views.key_input import PlayerKeyBindings, KeyInput
 
 class SettingsView(arcade.View):
     """
@@ -26,7 +26,7 @@ class SettingsView(arcade.View):
         self.manager = UIManager()
 
         # Create a vertical box layout to hold the UI elements
-        self.v_box = UIBoxLayout(x=WINDOW_WIDTH / 2 - 100, y=WINDOW_HEIGHT - 250, vertical=True, space_between=20)
+        self.v_box = UIBoxLayout(x=WINDOW_WIDTH / 2 - 250, y=WINDOW_HEIGHT - 470, vertical=True, space_between=20)
 
         # Create the volume slider
         self.volume_slider = UISlider(
@@ -41,14 +41,32 @@ class SettingsView(arcade.View):
         self.volume_slider.on_change = self.on_volume_change
 
         # Create a horizontal box layout to hold the volume icon and slider
-        h_box = UIBoxLayout(vertical=False)
+        volume_box = UIBoxLayout(vertical=False, space_between=10)
         
         # Add a text label for the volume icon
         volume_icon = UILabel(text="🔊", font_size=24)
-        h_box.add(volume_icon)
-        h_box.add(self.volume_slider)
+        volume_box.add(volume_icon)
+        volume_box.add(self.volume_slider)
         
-        self.v_box.add(h_box)
+        self.v_box.add(volume_box)
+
+        # Create the key bindings section
+        pause_key_input = KeyInput(label="Pause", key_code=settings.pause_key)
+        pause_key_input.on_key_change = lambda symbol, modifiers: self.on_binding_key_change("pause_key", symbol)
+        self.v_box.add(pause_key_input)
+
+        key_bindings_box = UIBoxLayout(vertical=False, space_between=50)
+        # Create player 1 key bindings
+        self.player1_bindings = PlayerKeyBindings("Player 1", settings.player1_keys)
+        self.player1_bindings.on_binding_change = lambda name, key: self.on_binding_change("player1_keys", name, key)
+        key_bindings_box.add(self.player1_bindings)
+
+        # Create player 2 key bindings
+        self.player2_bindings = PlayerKeyBindings("Player 2", settings.player2_keys)
+        self.player2_bindings.on_binding_change = lambda name, key: self.on_binding_change("player2_keys", name, key)
+        key_bindings_box.add(self.player2_bindings)
+        
+        self.v_box.add(key_bindings_box)
 
         # Create the back button
         self.back_button = UIFlatButton(text="Back", width=200, height=50, style=BUTTON_STYLE)
@@ -66,6 +84,25 @@ class SettingsView(arcade.View):
         It updates the master volume setting.
         """
         settings.master_volume = self.volume_slider.value / 100
+    
+    def on_binding_key_change(self, setting_attr: str, new_key: int):
+        """ A callback function that is called when a key binding is changed.
+        Args:
+            setting_attr (str): The attribute name in the settings module (e.g., "pause_key").
+            new_key (int): The new key code.
+        """
+        settings.__setattr__(setting_attr, new_key)
+
+    def on_binding_change(self, setting_attr, binding_name: str, new_key: int):
+        """ A callback function that is called when a key binding is changed.
+        Args:
+            setting_attr (str): The attribute name in the settings module (e.g., "player1_keys").
+            binding_name (str): The name of the binding that was changed.
+            new_key (int): The new key code.
+        """
+        key_map = getattr(settings, setting_attr)
+        key_map[binding_name] = new_key
+        setattr(settings, setting_attr, key_map)
 
     def on_click_back(self, event):
         """
