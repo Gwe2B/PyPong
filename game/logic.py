@@ -2,7 +2,8 @@ import arcade
 import random
 import time
 
-from core import Ball, Player, WINDOW_WIDTH, WINDOW_HEIGHT, PLAYER1_KEYS, PLAYER2_KEYS
+from core import Ball, Player, WINDOW_WIDTH, WINDOW_HEIGHT
+from core import settings
 
 class GameLogic:
     def __init__(self):
@@ -12,8 +13,8 @@ class GameLogic:
         self.ball_sprite_list.append(self.ball)
 
         self.player_sprite_list = arcade.SpriteList()
-        self.player1 = Player(10, (WINDOW_HEIGHT - Player.PLAYER_HEIGHT)/2, PLAYER1_KEYS)
-        self.player2 = Player(WINDOW_WIDTH - 10 - Player.PLAYER_WIDTH, (WINDOW_HEIGHT - Player.PLAYER_HEIGHT)/2, PLAYER2_KEYS)
+        self.player1 = Player(10, (WINDOW_HEIGHT - Player.PLAYER_HEIGHT)/2, settings.player1_keys)
+        self.player2 = Player(WINDOW_WIDTH - 10 - Player.PLAYER_WIDTH, (WINDOW_HEIGHT - Player.PLAYER_HEIGHT)/2, settings.player2_keys)
         self.player_sprite_list.append(self.player1)
         self.player_sprite_list.append(self.player2)
 

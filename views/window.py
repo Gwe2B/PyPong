@@ -1,7 +1,7 @@
 import arcade
 import time
 
-from core import WINDOW_HEIGHT, WINDOW_WIDTH
+from core import WINDOW_HEIGHT, WINDOW_WIDTH, settings
 from game import GameLogic
 from views.pause import PauseView
 
@@ -57,7 +57,7 @@ class GameView(arcade.View):
 
     def on_key_press(self, symbol: int, modifiers: int):
         self.game_logic.handle_key_press(symbol, modifiers)
-        if symbol == arcade.key.P:
+        if symbol == settings.pause_key:
             pause_view = PauseView(self)
             self.window.show_view(pause_view)
 
