@@ -1,5 +1,6 @@
 import arcade
 from core.constants import WINDOW_WIDTH, WINDOW_HEIGHT
+from core.config import settings
 
 class Ball(arcade.Sprite):
     def __init__(self, pos_x: int, pos_y: int, velocity_x: float, velocity_y: float, delta_vx: float = 0.2, radius: int = 15, color = arcade.csscolor.WHITE):
@@ -17,6 +18,8 @@ class Ball(arcade.Sprite):
 
         super().__init__()
 
+        self.on_bounce_sound = arcade.load_sound('assets/sounds/bounce.wav')
+        self.on_scoring_sound = arcade.load_sound('assets/sounds/scoring.wav')
         self.texture = arcade.make_circle_texture(radius * 2, color)
 
         self.initial_x = pos_x
@@ -39,22 +42,27 @@ class Ball(arcade.Sprite):
 
         # See if the ball hit the edge of the screen. If so, change direction
         if self.center_x < self.radius:
+            self.on_scoring_sound.play(volume=settings.master_volume)
             if self.on_side_wall_hit:
                 self.on_side_wall_hit("left")
             self.velocity_x *= -1
 
         if self.center_x > WINDOW_WIDTH - self.radius:
+            self.on_scoring_sound.play(volume=settings.master_volume)
             if self.on_side_wall_hit:
                 self.on_side_wall_hit("right")
             self.velocity_x *= -1
 
         if self.center_y < self.radius:
+            self.on_bounce_sound.play(volume=settings.master_volume)
             self.velocity_y *= -1
 
         if self.center_y > WINDOW_HEIGHT - self.radius:
+            self.on_bounce_sound.play(volume=settings.master_volume)
             self.velocity_y *= -1
     
     def bounce(self):
+        self.on_bounce_sound.play(volume=settings.master_volume)
         self.velocity_x *= -1
         if self.velocity_x > 0:
             self.velocity_x += self.delta_vx

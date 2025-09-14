@@ -18,6 +18,7 @@ class GameLogic:
         self.player_sprite_list.append(self.player1)
         self.player_sprite_list.append(self.player2)
 
+        self.countdown_sound = arcade.load_sound('assets/sounds/count_down.wav')
         self.is_game_freezed = False
         self.freeze_start_time = 0
         self.freeze_game()
@@ -34,6 +35,7 @@ class GameLogic:
         self.freeze_game()
 
     def freeze_game(self):
+        self.countdown_sound.play(volume=settings.master_volume)
         self.freeze_start_time = time.time()
         self.is_game_freezed = True
 

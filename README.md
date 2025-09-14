@@ -48,3 +48,9 @@ First follow the instructions on how to set up the project then:
 ```
 
 It will generate a main.exe file in the dist folder. You just have to double click and enjoy.
+
+## Credits
+
+ - Ball bounce sound effect: [https://freesound.org/people/adh.dreaming/sounds/615576/](Bit Bounce by adh.dreaming)
+ - Scoring sound effect: [https://freesound.org/people/AceOfSpadesProduc100/sounds/333785/?](8-bit "failure" sound by AceOfSpadesProduc100)
+ - Count down: Myself (made with [https://www.audacityteam.org/](Audacity))
