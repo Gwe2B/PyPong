@@ -16,7 +16,7 @@ class KeyInput(UIBoxLayout):
     and when clicked, it waits for a new key press to update the binding.
     """
 
-    def __init__(self, label: str, key_code: int):
+    def __init__(self, label: str, key_code: int, on_key_change_callback=None, on_click_callback=None):
         """
         Initializes the KeyInput component.
         
@@ -28,6 +28,7 @@ class KeyInput(UIBoxLayout):
         
         self.key_code = key_code
         self.is_waiting_for_key = False
+        self.on_click_callback = on_click_callback
 
         # Create the label
         self.label = UILabel(text=label, width=100)
@@ -74,13 +75,14 @@ class KeyInput(UIBoxLayout):
         """
         self.is_waiting_for_key = True
         self.key_button.text = "Press a key..."
+        if self.on_click_callback:
+            self.on_click_callback(self)
 
-    def on_event(self, event: UIEvent):
-        if isinstance(event, UIKeyPressEvent):
-            self.on_key_press(event.symbol, event.modifiers)
-            self.on_key_change(event.symbol, event.modifiers)
-        else:
-            super().on_event(event)
+    def set_key(self, key: int):
+        self.key_code = key
+        self.key_button.text = self.reverse_key_lookup(key)
+        self.is_waiting_for_key = False
+        self.on_key_change(key, 0) # Modifiers are not used in this context
 
     def on_key_press(self, key: int, modifiers: int):
         """
@@ -102,7 +104,7 @@ class PlayerKeyBindings(UIBoxLayout):
     A UI component for managing the key bindings of a single player.
     """
 
-    def __init__(self, label: str, player_input_map):
+    def __init__(self, label: str, player_input_map, on_key_input_click_callback=None):
         """
         Initializes the PlayerKeyBindings component.
         
@@ -119,11 +121,12 @@ class PlayerKeyBindings(UIBoxLayout):
         self.add(title)
 
         # Key inputs
-        self.up_input = KeyInput(label="Up", key_code=self.keys["up"])
+        self.up_input = KeyInput(label="Up", key_code=self.keys["up"], on_click_callback=on_key_input_click_callback)
         self.up_input.on_key_change = self.register_key_change("up")
         self.add(self.up_input)
         
-        self.down_input = KeyInput(label="Down", key_code=self.keys["down"])
+        self.down_input = KeyInput(label="Down", key_code=self.keys["down"], on_click_callback=on_key_input_click_callback)
+        self.down_input.on_key_change = self.register_key_change("down")
         self.add(self.down_input)
 
     def register_key_change(self, binding_name: str):
