@@ -1,9 +1,13 @@
 import arcade
 
-from views import PyPong
+from views import GameView
+from core import WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE
 
 def main():
-    window = PyPong()
+    window = arcade.Window(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
+    game_view = GameView()
+    window.show_view(game_view)
     arcade.run()
 
-main()
+if __name__ == "__main__":
+    main()

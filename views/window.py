@@ -1,14 +1,14 @@
 import arcade
 import time
 
-from core import WINDOW_HEIGHT, WINDOW_TITLE, WINDOW_WIDTH
+from core import WINDOW_HEIGHT, WINDOW_WIDTH
 from game import GameLogic
+from views.pause import PauseView
 
-class PyPong(arcade.Window):
+class GameView(arcade.View):
     def __init__(self):
-        super().__init__(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE)
+        super().__init__()
         self.game_logic = GameLogic()
-        self.is_game_paused = False
         arcade.set_background_color(arcade.csscolor.BLACK)
 
     def on_draw(self):
@@ -40,34 +40,26 @@ class PyPong(arcade.Window):
 
         if self.game_logic.is_game_freezed:
             self.draw_freeze()
-        if self.is_game_paused:
-            self.draw_pause_menu()
 
     def draw_freeze(self):
         count = int(time.time() - self.game_logic.freeze_start_time)
+        if count >= 3:
+            count = 3
+
         arcade.draw_lrbt_rectangle_filled(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, (0, 0, 0, 150))
         arcade.draw_text(
             f"{3 - count}", WINDOW_WIDTH/2, WINDOW_HEIGHT/2,
             arcade.color.WHITE, 128, anchor_x="center", anchor_y="center"
         )
 
-    def draw_pause_menu(self):
-        arcade.draw_lrbt_rectangle_filled(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT, (0, 0, 0, 150))
-        arcade.draw_text(
-            "PAUSE\nPress P to unpause", WINDOW_WIDTH/2, WINDOW_HEIGHT/2,
-            arcade.color.WHITE, 64, width=600, align="center",
-            anchor_x="center", anchor_y="center", multiline=True
-        )
-
     def on_update(self, delta_time: float):
-        if self.is_game_paused:
-            return
         self.game_logic.update(delta_time)
 
     def on_key_press(self, symbol: int, modifiers: int):
         self.game_logic.handle_key_press(symbol, modifiers)
         if symbol == arcade.key.P:
-            self.is_game_paused = not self.is_game_paused
+            pause_view = PauseView(self)
+            self.window.show_view(pause_view)
 
     def on_key_release(self, symbol: int, modifiers: int):
         self.game_logic.handle_key_release(symbol, modifiers)

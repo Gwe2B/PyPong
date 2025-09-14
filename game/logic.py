@@ -18,7 +18,6 @@ class GameLogic:
         self.player_sprite_list.append(self.player2)
 
         self.is_game_freezed = False
-        self.is_game_paused = False
         self.freeze_start_time = 0
         self.freeze_game()
 
@@ -39,9 +38,6 @@ class GameLogic:
 
     def update(self, delta_time: float):
         """Update game state."""
-        if self.is_game_paused:
-            return
-
         self.player_sprite_list.update()
         if self.is_game_freezed:
             if time.time() - self.freeze_start_time >= 3:

@@ -1,1 +1,2 @@
-from .window import PyPong
+from .window import GameView
+from .pause import PauseView
