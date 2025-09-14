@@ -18,6 +18,7 @@ class GameLogic:
         self.player_sprite_list.append(self.player2)
 
         self.is_game_freezed = False
+        self.is_game_paused = False
         self.freeze_start_time = 0
         self.freeze_game()
 
@@ -38,14 +39,16 @@ class GameLogic:
 
     def update(self, delta_time: float):
         """Update game state."""
+        if self.is_game_paused:
+            return
+
+        self.player_sprite_list.update()
         if self.is_game_freezed:
             if time.time() - self.freeze_start_time >= 3:
                 self.is_game_freezed = False
             return
 
         self.ball_sprite_list.update()
-        self.player_sprite_list.update()
-
         ball_hit_list = arcade.check_for_collision_with_list(self.ball, self.player_sprite_list)
         if ball_hit_list:
             self.ball.bounce()
