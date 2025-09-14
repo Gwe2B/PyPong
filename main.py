@@ -1,6 +1,6 @@
 import arcade
 
-from core.PyPong import PyPong
+from views import PyPong
 
 def main():
     window = PyPong()
