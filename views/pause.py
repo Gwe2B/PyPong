@@ -1,8 +1,9 @@
 
 import arcade
-from arcade.gui import UIManager, UIFlatButton
+from arcade.gui import UIManager, UIBoxLayout, UIFlatButton
 
-from core import WINDOW_WIDTH, WINDOW_HEIGHT
+from core import WINDOW_WIDTH, WINDOW_HEIGHT, BUTTON_STYLE
+from views.settings import SettingsView
 
 
 class PauseView(arcade.View):
@@ -27,25 +28,50 @@ class PauseView(arcade.View):
         self.game_view = game_view
         self.ui_manager = UIManager()
 
+        # Create a vertical box layout to hold the buttons
+        self.v_box = UIBoxLayout(
+            x=WINDOW_WIDTH / 2 - 100,
+            y=WINDOW_HEIGHT / 2 - 130,
+            vertical=True,
+            space_between=20
+        )
+
+        # Create the resume button
         resume_button = UIFlatButton(
             text="RESUME",
             width=200,
             height=50,
+            style=BUTTON_STYLE
         )
+        self.v_box.add(resume_button)
 
-        resume_button.with_background(color=arcade.color.BLACK)
-        resume_button.with_border(width=2, color=arcade.color.WHITE)
-        resume_button.center_x = WINDOW_WIDTH / 2
-        resume_button.center_y = WINDOW_HEIGHT / 2 - 100
-        self.ui_manager.add(resume_button)
+        # Create the settings button
+        settings_button = UIFlatButton(
+            text="SETTINGS",
+            width=200,
+            height=50,
+            style=BUTTON_STYLE
+        )
+        self.v_box.add(settings_button)
 
+        # Assign the on_click events
         resume_button.on_click = self.on_resume_button_click
+        settings_button.on_click = self.on_settings_button_click
+
+        # Create a widget to hold the v_box widget, that will center the buttons
+        self.ui_manager.add(self.v_box)
 
     def on_resume_button_click(self, event):
         """
         Resumes the game when the resume button is clicked.
         """
         self.window.show_view(self.game_view)
+
+    def on_settings_button_click(self, event):
+        """
+        Opens the settings view when the settings button is clicked.
+        """
+        self.window.show_view(SettingsView(self))
 
     def on_show_view(self):
         """

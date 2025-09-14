@@ -66,7 +66,7 @@ class Settings:
             object.__setattr__(self, name, value)
         else:
             self._config[name] = value
-            self.save()
+            #self.save()
 
 # Create a single instance of the Settings class to be used throughout the application
 settings = Settings()
