@@ -28,12 +28,11 @@ class PyPong(arcade.Window):
         if side == "left":
             self.player2.increment_score()  # Joueur 2 marque
         elif side == "right":
-            self.player2.increment_score()  # Joueur 1 marque
+            self.player1.increment_score()  # Joueur 1 marque
+        
         # Réinitialise la balle au centre
-        self.ball.center_x = WINDOW_WIDTH / 2
-        self.ball.center_y = WINDOW_HEIGHT / 2
         self.ball.velocity_y = random.uniform(-0.5, 0.5)
-        # Optionnel : afficher le score (voir on_draw)
+        self.ball.reset()
 
     def on_draw(self):
         self.clear()
